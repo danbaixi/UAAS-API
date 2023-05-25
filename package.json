@@ -1,7 +1,7 @@
 {
-  "name": "koa-template",
+  "name": "baiyun-api",
   "version": "1.0.0",
-  "description": "koa2 template",
+  "description": "广东白云学院教务系统api，非官方api",
   "main": "index.js",
   "scripts": {
     "start": "nodemon ./bin/www",
@@ -15,10 +15,16 @@
   "license": "ISC",
   "dependencies": {
     "@koa/router": "^12.0.0",
+    "axios": "^1.4.0",
+    "cheerio": "1.0.0-rc.12",
+    "fake-useragent": "^1.0.1",
+    "iconv-lite": "^0.6.3",
     "koa": "^2.14.2",
     "koa-bodyparser": "^4.4.0",
     "koa-helmet": "^7.0.2",
-    "log4js": "^6.9.1"
+    "koa-session": "^6.4.0",
+    "log4js": "^6.9.1",
+    "md5": "^2.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

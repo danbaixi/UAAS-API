@@ -1,8 +1,11 @@
 const Router = require("@koa/router")
 const router = new Router()
 
-const testController = require("../controllers/test")
-
-router.get("/", testController.demo)
+const loginController = require("../controllers/login")
+router.get("/", (ctx, next) => {
+  ctx.result = "hello BaiyunAPI"
+  return next()
+})
+router.post("/login", loginController.login)
 
 module.exports = router

@@ -4,7 +4,7 @@ const fs = require("fs")
 const path = require("path")
 const log4js = require("log4js")
 
-const logPath = path.resolve(__dirname, "../logs/koa-template.log")
+const logPath = path.resolve(__dirname, "../logs/access.log")
 const logsDir = path.parse(logPath).dir
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir)
@@ -41,6 +41,7 @@ const loggerMiddleware = async (ctx, next) => {
     (ctx.socket &&
       (ctx.socket.remoteAddress ||
         (ctx.socket.socket && ctx.socket.socket.remoteAddress)))
+
   let logText = `${ctx.method} ${ctx.status} ${
     ctx.url
   } 请求参数： ${JSON.stringify(ctx.request.body)} 响应参数： ${JSON.stringify(

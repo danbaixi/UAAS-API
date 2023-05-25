@@ -1,6 +1,7 @@
 const Koa = require("koa")
 const bodyParser = require("koa-bodyparser")
 const helmet = require("koa-helmet")
+
 const { loggerMiddleware } = require("./middlewares/logger")
 const { responseHandler, errorHandler } = require("./middlewares/response")
 
@@ -11,16 +12,16 @@ app.use(loggerMiddleware)
 // Error Handler
 app.use(errorHandler)
 
-// routers
-const indexRouter = require("./routes/index")
-const userRouter = require("./routes/user")
-
-app.use(indexRouter.routes(), indexRouter.allowedMethods())
-app.use(userRouter.routes(), userRouter.allowedMethods())
-
 // middlewares
 app.use(bodyParser())
 app.use(helmet())
+
+// routers
+const indexRouter = require("./routes/index")
+const dataRouter = require("./routes/data")
+
+app.use(indexRouter.routes(), indexRouter.allowedMethods())
+app.use(dataRouter.routes(), dataRouter.allowedMethods())
 
 // Response
 app.use(responseHandler)
