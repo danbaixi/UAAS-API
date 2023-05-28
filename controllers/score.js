@@ -1,7 +1,10 @@
 const cheerio = require("cheerio")
 const request = require("../request/data")
 const { getRequestToken, matchTermName } = require("../util/util")
-
+const {
+  scores: scoresTestData,
+  rawScores: rawScoresTestData,
+} = require("../util/testData")
 // 请求参数
 // SJ=1 有效成绩，=0 原始成绩
 const postData = {
@@ -17,6 +20,11 @@ const postData = {
 // 获取全部有效成绩
 const getList = async (ctx, next) => {
   const cookie = getRequestToken(ctx)
+  // 测试号
+  if (ctx.request.headers.isTest) {
+    ctx.result = scoresTestData
+    return next()
+  }
   const content = await request.getScoreApi(cookie, postData)
   const $ = cheerio.load(content)
   // 解析成绩表格
@@ -68,6 +76,11 @@ const getList = async (ctx, next) => {
 // 获取全部原始成绩
 const getRawList = async (ctx, next) => {
   const cookie = getRequestToken(ctx)
+  // 测试号
+  if (ctx.request.headers.isTest) {
+    ctx.result = rawScoresTestData
+    return next()
+  }
   postData.SJ = 0
   const content = await request.getScoreApi(cookie, postData)
   const $ = cheerio.load(content)

@@ -1,6 +1,6 @@
 const cheerio = require("cheerio")
 const request = require("../request")
-const { schoolCode } = require("../util/const")
+const { schoolCode, testToken } = require("../util/const")
 const { buildExpression, getUserAgent } = require("../util/util")
 const md5 = require("md5")
 
@@ -37,6 +37,13 @@ const login = async (ctx, next) => {
   if (!stuId || !password) {
     ctx.result = ""
     ctx.msg = "学号和密码不能为空"
+    return next()
+  }
+  // 测试号
+  if (stuId == "test" && password == "123456") {
+    ctx.result = {
+      cookie: testToken,
+    }
     return next()
   }
   // 获取cookie和formData
