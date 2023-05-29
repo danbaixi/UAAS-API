@@ -1,9 +1,18 @@
 const cheerio = require("cheerio")
 const request = require("../request/data")
-const { getRequestToken, matchTermName } = require("../util/util")
+const { attendances: testAttendanceData } = require("../util/testData")
+const {
+  getRequestToken,
+  matchTermName,
+  splitMainName,
+} = require("../util/util")
 
 // 获取考勤列表
 const getList = async (ctx, next) => {
+  if (ctx.request.headers.isTest) {
+    ctx.result = testAttendanceData
+    return next()
+  }
   const cookie = getRequestToken(ctx)
   const content = await request.getAttendanceApi(cookie)
   const $ = cheerio.load(content)
@@ -37,7 +46,13 @@ const getList = async (ctx, next) => {
     trDom.slice(1).each((trIndex, tr) => {
       const tds = $(tr).find("td")
       tds.each((tdIndex, td) => {
-        attendance[indexRef[tdIndex]] = $(td).text()
+        const txt = $(td).text()
+        attendance[indexRef[tdIndex]] = txt
+        if (tdIndex == 1) {
+          const [num, name] = splitMainName(txt)
+          attendance["teacherNum"] = num
+          attendance["teacher"] = name
+        }
         if (tdIndex == 0 || tdIndex == tds.length - 1) {
           if (tdIndex > 0) {
             attendanceItem.attendanceList.push(attendance)

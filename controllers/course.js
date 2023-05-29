@@ -1,11 +1,17 @@
 const cheerio = require("cheerio")
 const request = require("../request/data")
-const { getRequestToken, randomString } = require("../util/util")
+const { getRequestToken, randomString, splitMainName } = require("../util/util")
 const { schoolCode } = require("../util/const")
+const { courses: coursesTestData } = require("../util/testData")
 const md5 = require("md5")
 
 // 获取课表
 const getList = async (ctx, next) => {
+  // 测试号
+  if (ctx.request.headers.isTest) {
+    ctx.result = coursesTestData
+    return next()
+  }
   const cookie = getRequestToken(ctx)
   const formContent = await request.getCourseFormApi(cookie)
   const form = cheerio.load(formContent)
@@ -53,14 +59,29 @@ const getList = async (ctx, next) => {
   const tables = $("table")
   const courseTable = tables.eq(tables.length - 1)
   const trs = courseTable.find("tbody tr")
+  let prevCourseInfo = null
   trs.slice(2, trs.length - 1).each((trIndex, tr) => {
-    const course = {}
-    $(tr)
-      .find("td")
-      .slice(1)
-      .each((tdIndex, td) => {
-        course[indexRef[tdIndex]] = $(td).text()
-      })
+    let course = {}
+    let isSameCourse = false
+    const tds = $(tr).find("td").slice(1)
+    if (tds.eq(0).text() == "") {
+      // 相同课程
+      isSameCourse = true
+    }
+    tds.slice().each((tdIndex, td) => {
+      const txt = $(td).text()
+      if (isSameCourse && txt == "" && tdIndex < 9) {
+        course[indexRef[tdIndex]] = prevCourseInfo[indexRef[tdIndex]]
+        return
+      }
+      course[indexRef[tdIndex]] = txt
+      if (tdIndex == 0 && txt != "") {
+        const [num, name] = splitMainName(txt)
+        course["num"] = num
+        course["name"] = name
+      }
+    })
+    prevCourseInfo = course
     courses.push(course)
   })
   ctx.result = courses

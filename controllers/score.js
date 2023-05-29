@@ -1,6 +1,10 @@
 const cheerio = require("cheerio")
 const request = require("../request/data")
-const { getRequestToken, matchTermName } = require("../util/util")
+const {
+  getRequestToken,
+  matchTermName,
+  splitMainName,
+} = require("../util/util")
 const {
   scores: scoresTestData,
   rawScores: rawScoresTestData,
@@ -62,6 +66,12 @@ const getList = async (ctx, next) => {
           })
         } else if (tdIndex > 0) {
           score[indexRef[tdIndex - 1]] = txt
+          // 分离名称和代码
+          if (tdIndex == 1) {
+            const [num, name] = splitMainName(txt)
+            score["num"] = num
+            score["name"] = name
+          }
         }
       })
     scoreItem.scoreList.push(score)
@@ -125,7 +135,14 @@ const getRawList = async (ctx, next) => {
         return
       }
       tdDom.slice(1).each((tdIndex, td) => {
-        score[indexRef[tdIndex]] = $(td).text()
+        const txt = $(td).text()
+        score[indexRef[tdIndex]] = txt
+        // 分离名称和代码
+        if (tdIndex == 0) {
+          const [num, name] = splitMainName(txt)
+          score["num"] = num
+          score["name"] = name
+        }
       })
       scoreItem.scoreList.push(score)
     })

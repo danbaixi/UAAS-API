@@ -52,10 +52,23 @@ function randomString(len) {
   return pwd
 }
 
+// 分离名称和代码
+// [U12312]计算机网络
+// [2031293]江老师
+function splitMainName(str) {
+  const reg = /\[(\w+)\](.+)/
+  const result = str.match(reg)
+  if (!result) {
+    return false
+  }
+  return [result[1], result[2]]
+}
+
 module.exports = {
   buildExpression,
   getUserAgent,
   getRequestToken,
   matchTermName,
   randomString,
+  splitMainName,
 }
