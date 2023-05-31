@@ -18,8 +18,7 @@ const getList = async (ctx, next) => {
   // 获取hidyzm
   const hidyzm = form("input[name='hidyzm']").val()
   if (!hidyzm) {
-    ctx.result = ""
-    ctx.msg = "无法获取到hidyzm值"
+    ctx.errMsg = "无法获取到hidyzm值"
     return next()
   }
   // 获取学期

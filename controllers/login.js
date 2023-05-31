@@ -35,12 +35,15 @@ async function getLoginData() {
 const login = async (ctx, next) => {
   const { stuId, password } = ctx.request.body
   if (!stuId || !password) {
-    ctx.result = ""
-    ctx.msg = "学号和密码不能为空"
+    ctx.errMsg = "学号和密码不能为空"
     return next()
   }
   // 测试号
-  if (stuId == "test" && password == "123456") {
+  if (stuId == "test") {
+    if (password !== "123456") {
+      ctx.errMsg = "测试账号的密码为123456"
+      return next()
+    }
     ctx.result = {
       cookie: testToken,
     }
