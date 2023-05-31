@@ -38,7 +38,10 @@ const createRequest = (axiosOptions, options = {}) => {
       res.data = iconv.decode(res.data, "gbk")
       // 判断cookie是否已失效
       if (res.data.indexOf("无权访问") > -1) {
-        throw new Error("token已失效，请重新登录")
+        return Promise.reject({
+          code: 403,
+          message: "token已失效，请重新登录",
+        })
       }
       return res
     })
