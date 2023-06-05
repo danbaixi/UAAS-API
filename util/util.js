@@ -64,6 +64,56 @@ function splitMainName(str) {
   return [result[1], result[2]]
 }
 
+// 解析周数
+// week 周次范围
+// fullWeek 是否为全周，空为全周
+function parseWeeks(week, fullWeek) {
+  const result = []
+  const ranges = week.split(",")
+  ranges.map((range) => {
+    const nums = range.split("-")
+    if (nums.length == 1) {
+      result.push(parseInt(nums[0]))
+    } else {
+      for (let i = parseInt(nums[0]); i <= parseInt(nums[1]); i++) {
+        if (
+          fullWeek == "" ||
+          (fullWeek == "单" && i % 2 == 1) ||
+          (fullWeek == "双" && i % 2 == 0)
+        ) {
+          result.push(i)
+          continue
+        }
+      }
+    }
+  })
+  return result
+}
+
+// 解析节次
+// 返回首节数和节次数量
+function parseSection(sections) {
+  const nums = sections.split("-")
+  const section = parseInt(nums[0])
+  const sectionCount = nums[1] - nums[0] + 1
+  return {
+    section,
+    sectionCount,
+  }
+}
+
+// 大写数字转阿拉伯
+function numberToArabic(num) {
+  const obj = {
+    一: 1,
+    二: 2,
+    三: 3,
+    四: 4,
+    五: 5,
+  }
+  return obj[num] ? obj[num] : ""
+}
+
 module.exports = {
   buildExpression,
   getUserAgent,
@@ -71,4 +121,7 @@ module.exports = {
   matchTermName,
   randomString,
   splitMainName,
+  parseWeeks,
+  numberToArabic,
+  parseSection,
 }

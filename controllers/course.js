@@ -1,6 +1,13 @@
 const cheerio = require("cheerio")
 const request = require("../request/data")
-const { getRequestToken, randomString, splitMainName } = require("../util/util")
+const {
+  getRequestToken,
+  randomString,
+  splitMainName,
+  numberToArabic,
+  parseWeeks,
+  parseSection,
+} = require("../util/util")
 const { schoolCode } = require("../util/const")
 const { courses: coursesTestData } = require("../util/testData")
 const md5 = require("md5")
@@ -50,7 +57,7 @@ const getList = async (ctx, next) => {
     "teachMethod",
     "method",
     "teacher",
-    "week",
+    "weeks",
     "section",
     "address",
   ]
@@ -80,6 +87,18 @@ const getList = async (ctx, next) => {
         course["name"] = name
       }
     })
+    // 备份解析前的数据
+    course["rawWeeks"] = course["weeks"]
+    course["rawSection"] = course["section"]
+    // 解析周次，星期，节次
+    const pattern = /^(\S+)\[(\S+)节\](\S?)$/
+    const match = pattern.exec(course.section)
+    const { section, sectionCount } = parseSection(match[2])
+    const fullWeek = match[3]
+    course["week"] = numberToArabic(match[1])
+    course["section"] = section
+    course["sectionCount"] = sectionCount
+    course["weeks"] = parseWeeks(course["weeks"], fullWeek)
     prevCourseInfo = course
     courses.push(course)
   })
