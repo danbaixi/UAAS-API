@@ -1,14 +1,14 @@
-const cheerio = require("cheerio")
-const request = require("../request/data")
-const {
-  getRequestToken,
-  matchTermName,
-  splitMainName,
-} = require("../util/util")
+const { getRequestToken } = require("../util/util")
 const {
   scores: scoresTestData,
   rawScores: rawScoresTestData,
 } = require("../util/testData")
+const path = require("path")
+const servicePath = `${path.resolve(__dirname, "../services")}/${
+  process.env.SCHOOL_CODE
+}`
+const services = require(servicePath)
+
 // 请求参数
 // SJ=1 有效成绩，=0 原始成绩
 const postData = {
@@ -24,133 +24,24 @@ const postData = {
 // 获取全部有效成绩
 const getList = async (ctx, next) => {
   const cookie = getRequestToken(ctx)
-  // 测试号
-  if (ctx.request.headers.isTest) {
-    ctx.result = scoresTestData
-    return next()
+  try {
+    const scores = await services.getScoresList(cookie)
+    ctx.result = scores
+  } catch (err) {
+    ctx.errMsg = err.message
   }
-  const content = await request.getScoreApi(cookie, postData)
-  const $ = cheerio.load(content)
-  // 解析成绩表格
-  const scores = []
-  let scoreItem = Object.assign({})
-  // 表格列索引与成绩字段的映射
-  const indexRef = [
-    "name",
-    "courseCredit",
-    "category",
-    "courseCategory",
-    "method",
-    "property",
-    "score",
-    "credit",
-    "GP",
-    "GPA",
-    "mark",
-  ]
-  const trs = $("#ID_Table tbody tr")
-  trs.each((trIndex, tr) => {
-    const score = {}
-    $(tr)
-      .find("td")
-      .each((tdIndex, td) => {
-        $(td).find("br").remove() // 除去br
-        const txt = $(td).text()
-        if (tdIndex == 0 && txt != "") {
-          if (trIndex > 0) {
-            scores.push(scoreItem)
-          }
-          scoreItem = Object.assign({
-            termName: txt,
-            scoreList: [],
-          })
-        } else if (tdIndex > 0) {
-          score[indexRef[tdIndex - 1]] = txt
-          // 分离名称和代码
-          if (tdIndex == 1) {
-            const [num, name] = splitMainName(txt)
-            score["num"] = num
-            score["name"] = name
-          }
-        }
-      })
-    scoreItem.scoreList.push(score)
-    if (trIndex == trs.length - 1) {
-      scores.push(scoreItem)
-    }
-  })
-  ctx.result = scores
   return next()
 }
 
 // 获取全部原始成绩
 const getRawList = async (ctx, next) => {
   const cookie = getRequestToken(ctx)
-  // 测试号
-  if (ctx.request.headers.isTest) {
-    ctx.result = rawScoresTestData
-    return next()
+  try {
+    const scores = await services.getRawScoreList(cookie)
+    ctx.result = scores
+  } catch (err) {
+    ctx.errMsg = err.message
   }
-  postData.SJ = 0
-  const content = await request.getScoreApi(cookie, postData)
-  const $ = cheerio.load(content)
-  // 解析成绩表格
-  const scores = []
-  let scoreItem = Object.assign({})
-  // 表格列索引与成绩字段的映射
-  const indexRef = [
-    "name",
-    "courseCredit",
-    "category",
-    "courseCategory",
-    "method",
-    "property",
-    "normalScore",
-    "midtermScore",
-    "finalScore",
-    "skillScore",
-    "complexScore",
-    "minorMark",
-    "mark",
-  ]
-  const tables = $("table[name='theExportData']").slice(1)
-  tables.each((tableIndex, table) => {
-    const trDom = $(table).find("tbody tr")
-    // 跳过 tr length = 2的表格
-    if (trDom.length == 2) {
-      return
-    }
-    trDom.each((trIndex, tr) => {
-      const score = {}
-      const tdDom = $(tr).find("td")
-      if (tdDom.length == 1) {
-        if (tableIndex > 0) {
-          scores.push(scoreItem)
-        }
-        const txt = $(tdDom[0]).text()
-        scoreItem = Object.assign({
-          termName: matchTermName(txt),
-          scoreList: [],
-        })
-        return
-      }
-      tdDom.slice(1).each((tdIndex, td) => {
-        const txt = $(td).text()
-        score[indexRef[tdIndex]] = txt
-        // 分离名称和代码
-        if (tdIndex == 0) {
-          const [num, name] = splitMainName(txt)
-          score["num"] = num
-          score["name"] = name
-        }
-      })
-      scoreItem.scoreList.push(score)
-    })
-    if (tableIndex == tables.length - 1) {
-      scores.push(scoreItem)
-    }
-  })
-  ctx.result = scores
   return next()
 }
 

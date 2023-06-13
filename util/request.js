@@ -1,10 +1,12 @@
 const axios = require("axios")
 const iconv = require("iconv-lite")
-const { domain } = require("./const")
 const { getUserAgent } = require("./util")
+const getSchoolConfig = require("../util/schoolConfig")
+const schoolConfig = getSchoolConfig()
+const responseInterceptors = require("./responseInterceptors")
 
 const defaultHeaders = {
-  Host: domain,
+  Host: schoolConfig.host,
   Accept:
     "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
   "Accept-Encoding": "gzip, deflate, br",
@@ -14,7 +16,9 @@ const defaultHeaders = {
 const createRequest = (axiosOptions, options = {}) => {
   return new Promise((resolve, reject) => {
     const axiosInstance = axios.create({
-      baseURL: `https://${domain}`,
+      baseURL: `${schoolConfig.ssl ? "https" : "http"}://${
+        schoolConfig.domain
+      }`,
       timeout: 20000,
       responseType: "arraybuffer",
     })
@@ -35,13 +39,10 @@ const createRequest = (axiosOptions, options = {}) => {
     // 响应拦截器
     axiosInstance.interceptors.response.use((res) => {
       // 转码
-      res.data = iconv.decode(res.data, "gbk")
-      // 判断cookie是否已失效
-      if (res.data.indexOf("无权访问") > -1) {
-        return Promise.reject({
-          code: 403,
-          message: "token已失效，请重新登录",
-        })
+      res.data = iconv.decode(res.data, schoolConfig.chatset || "utf-8")
+      const diyInterceptor = responseInterceptors[process.env.SCHOOL_CODE]
+      if (diyInterceptor) {
+        return diyInterceptor(res)
       }
       return res
     })

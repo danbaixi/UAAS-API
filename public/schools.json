@@ -1,0 +1,26 @@
+{
+  "test": {
+    "type": "qingguo",
+    "code": "test",
+    "name": "测试学院",
+    "host": "",
+    "domain": ""
+  },
+  "10822": {
+    "type": "qingguo",
+    "code": "10822",
+    "name": "广东白云学院",
+    "host": "jwgl.baiyunu.edu.cn",
+    "domain": "jwgl.baiyunu.edu.cn",
+    "ssl": true,
+    "chatset": "gbk"
+  },
+  "13776": {
+    "type": "qiangzhi",
+    "code": "13776",
+    "name": "江西软件职业技术大学",
+    "host": "eam.jxuspt.com:8588",
+    "domain": "eam.jxuspt.com:8588/jsxsd",
+    "ssl": false
+  }
+}

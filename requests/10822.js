@@ -1,7 +1,31 @@
 const createRequest = require("../util/request")
 
-// 存放获取数据的接口，如成绩、课表、考勤等
-// 这类接口需要登录成功后获取cookie
+// 获取登录需要的params
+const getLoginFormData = () => {
+  return createRequest(
+    {
+      url: "/_data/login_home.aspx",
+    },
+    {
+      returnDataType: "all",
+    }
+  )
+}
+
+// 登录
+const login = (cookie, data, userAgent) => {
+  return createRequest({
+    url: "/_data/login_home.aspx",
+    method: "POST",
+    headers: {
+      Cookie: cookie,
+      Origin: "https://jwgl.baiyunu.edu.cn",
+      Referer: "https://jwgl.baiyunu.edu.cn/_data/login_home.aspx",
+      "User-Agent": userAgent,
+    },
+    data,
+  })
+}
 
 // 成绩请求
 const getScoreApi = (cookie, data) => {
@@ -54,6 +78,8 @@ const getCourseApi = (cookie, data, m) => {
 }
 
 module.exports = {
+  getLoginFormData,
+  login,
   getScoreApi,
   getAttendanceApi,
   getCourseFormApi,

@@ -5,15 +5,11 @@ const scoreController = require("../controllers/score")
 const attendanceController = require("../controllers/attendance")
 const courseController = require("../controllers/course")
 
-const { testToken } = require("../util/const")
-
 const authHandler = async (ctx, next) => {
   const { token } = ctx.request.headers
   if (!token) {
     ctx.throw(401, "请求头中携带的token不能为空")
   }
-  // 判断是否是测试号
-  ctx.request.headers.isTest = token == testToken
   return next()
 }
 

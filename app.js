@@ -1,3 +1,4 @@
+require("dotenv").config()
 const Koa = require("koa")
 const bodyParser = require("koa-bodyparser")
 const helmet = require("koa-helmet")
