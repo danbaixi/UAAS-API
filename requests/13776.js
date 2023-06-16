@@ -1,7 +1,7 @@
 const createRequest = require("../util/request")
 
 // 获取登录需要的params
-const getLoginFormData = () => {
+const getLoginFormRequest = () => {
   return createRequest(
     {
       url: "/",
@@ -32,20 +32,19 @@ const login = (cookie, data) => {
 }
 
 // 成绩请求
-const getScoreApi = (cookie, data) => {
+const getScoresRequest = (cookie, data) => {
   return createRequest({
     url: "/kscj/cjcx_list",
     method: "POST",
     headers: {
       Cookie: cookie,
-      Referer: "http://eam.jxuspt.com:8588/jsxsd/kscj/cjcx_query",
     },
     data,
   })
 }
 
 // 课表查询表单隐藏input值
-const getCourseFormApi = (cookie, data) => {
+const getCoursesFormRequest = (cookie, data) => {
   return createRequest({
     url: "/xskb/xskb_list.do",
     headers: {
@@ -56,7 +55,7 @@ const getCourseFormApi = (cookie, data) => {
 }
 
 // 获取课表
-const getCourseApi = (cookie, data) => {
+const getCoursesRequest = (cookie, data) => {
   return createRequest({
     url: "/xskb/xskb_list.do",
     method: "POST",
@@ -69,11 +68,9 @@ const getCourseApi = (cookie, data) => {
 }
 
 module.exports = {
-  getLoginFormData,
+  getLoginFormRequest,
   login,
-  getScoreFormApi,
-  getScoreApi,
-  getAttendanceApi,
-  getCourseFormApi,
-  getCourseApi,
+  getScoresRequest,
+  getCoursesFormRequest,
+  getCoursesRequest,
 }

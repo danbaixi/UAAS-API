@@ -1,7 +1,7 @@
 const createRequest = require("../util/request")
 
 // 获取登录需要的params
-const getLoginFormData = () => {
+const getLoginFormRequestRequest = () => {
   return createRequest(
     {
       url: "/_data/login_home.aspx",
@@ -13,7 +13,7 @@ const getLoginFormData = () => {
 }
 
 // 登录
-const login = (cookie, data, userAgent) => {
+const loginRequest = (cookie, data, userAgent) => {
   return createRequest({
     url: "/_data/login_home.aspx",
     method: "POST",
@@ -28,7 +28,7 @@ const login = (cookie, data, userAgent) => {
 }
 
 // 成绩请求
-const getScoreApi = (cookie, data) => {
+const getScoresRequest = (cookie, data) => {
   return createRequest({
     url: "/xscj/Stu_MyScore_rpt.aspx",
     method: "POST",
@@ -41,7 +41,7 @@ const getScoreApi = (cookie, data) => {
 }
 
 // 考勤请求
-const getAttendanceApi = (cookie, data) => {
+const getAttendancesRequest = (cookie, data) => {
   return createRequest({
     url: "/JXKQ/Stu_kqjg_rpt.aspx",
     headers: {
@@ -53,7 +53,7 @@ const getAttendanceApi = (cookie, data) => {
 }
 
 // 课表查询表单隐藏input值
-const getCourseFormApi = (cookie, data) => {
+const getCoursesFormRequest = (cookie, data) => {
   return createRequest({
     url: "/znpk/Pri_StuSel.aspx",
     headers: {
@@ -65,7 +65,7 @@ const getCourseFormApi = (cookie, data) => {
 }
 
 // 获取课表
-const getCourseApi = (cookie, data, m) => {
+const getCoursesRequest = (cookie, data, m) => {
   return createRequest({
     url: `/znpk/Pri_StuSel_rpt.aspx?m=${m}`,
     method: "POST",
@@ -78,10 +78,10 @@ const getCourseApi = (cookie, data, m) => {
 }
 
 module.exports = {
-  getLoginFormData,
-  login,
-  getScoreApi,
-  getAttendanceApi,
-  getCourseFormApi,
-  getCourseApi,
+  getLoginFormRequestRequest,
+  loginRequest,
+  getScoresRequest,
+  getAttendancesRequest,
+  getCoursesFormRequest,
+  getCoursesRequest,
 }

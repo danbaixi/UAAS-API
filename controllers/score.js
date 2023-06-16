@@ -25,7 +25,7 @@ const postData = {
 const getList = async (ctx, next) => {
   const cookie = getRequestToken(ctx)
   try {
-    const scores = await services.getScoresList(cookie)
+    const scores = await services.getScoreList(cookie)
     ctx.result = scores
   } catch (err) {
     ctx.errMsg = err.message

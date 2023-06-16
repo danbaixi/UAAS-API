@@ -152,6 +152,15 @@ function encodeInp(input) {
   return output
 }
 
+// 获取响应头的cookies
+function getCookiesFromHeaders(headers) {
+  const cookies = []
+  for (let c of headers["set-cookie"]) {
+    cookies.push(c.split(";")[0])
+  }
+  return cookies.join(";")
+}
+
 module.exports = {
   buildExpression,
   getUserAgent,
@@ -163,4 +172,5 @@ module.exports = {
   numberToArabic,
   parseSection,
   encodeInp,
+  getCookiesFromHeaders,
 }

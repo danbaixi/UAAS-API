@@ -1,10 +1,11 @@
 const request = require("../requests/13776")
 const cheerio = require("cheerio")
 const { encodeInp, parseWeeks } = require("../util/util")
+const { scoreParser } = require("../parsers/qiangzhi")
 
 // 登录初始化
 const loginInit = async () => {
-  const formDataRaw = await request.getLoginFormData()
+  const formDataRaw = await request.getLoginFormRequest()
   const cookies = []
   for (let c of formDataRaw.headers["set-cookie"]) {
     cookies.push(c.split(";")[0])
@@ -30,7 +31,7 @@ const login = async (stuId, password) => {
     userPassword: "",
     encoded,
   }
-  const res = await request.login(cookie, postData)
+  const res = await request.loginRequest(cookie, postData)
   const $ = cheerio.load(res.data)
   const errMsg = $("#showMsg").text().trim()
   // 登录成功
@@ -42,7 +43,7 @@ const login = async (stuId, password) => {
 
 // 获取课表
 const getCourseList = async (cookie) => {
-  const formContent = await request.getCourseFormApi(cookie)
+  const formContent = await request.getCoursesFormRequest(cookie)
   const form$ = cheerio.load(formContent)
   // 获取当前选中学期
   const xnxq01id = form$("#xnxq01id option[selected='selected']").val()
@@ -57,7 +58,7 @@ const getCourseList = async (cookie) => {
     xnxq01id,
     kbjcmsid,
   }
-  const content = await request.getCourseApi(cookie, postData)
+  const content = await request.getCoursesRequest(cookie, postData)
   const courses = []
   // font title 索引
   const fontTitleRef = {
@@ -116,10 +117,9 @@ const getScoreList = async (cookie) => {
     xsfs: all,
     mold: "",
   }
-  const content = await request.getScoreApi(cookie, postData)
-  const $ = cheerio(content)
-  // TODO:
-  const scores = []
+  const content = await request.getScoresRequest(cookie, postData)
+  const $ = cheerio.load(content)
+  const scores = scoreParser($)
   return scores
 }
 

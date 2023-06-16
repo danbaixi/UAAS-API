@@ -27,7 +27,7 @@ const scorePostData = {
 
 // 登录初始化
 const loginInit = async () => {
-  const formDataRaw = await request.getLoginFormData()
+  const formDataRaw = await request.getLoginFormRequest()
   let cookie = ""
   for (let c of formDataRaw.headers["set-cookie"]) {
     if (c.indexOf("ASP.NET_SessionId") > -1) {
@@ -89,7 +89,7 @@ const login = async (stuId, password) => {
   }
   //console.log("postData", postData)
 
-  const res = await request.login(cookie, postData, pcInfo)
+  const res = await request.loginRequest(cookie, postData, pcInfo)
   const $ = cheerio.load(res)
   const tips = $("#divLogNote").html()
   if (tips.indexOf("正在加载") == -1) {
@@ -102,7 +102,7 @@ const login = async (stuId, password) => {
 // 获取课表
 const getCourseList = async (cookie) => {
   const schoolCode = getSchoolConfig("code")
-  const formContent = await request.getCourseFormApi(cookie)
+  const formContent = await request.getCoursesFormRequest(cookie)
   const form = cheerio.load(formContent)
   // 获取hidyzm
   const hidyzm = form("input[name='hidyzm']").val()
@@ -125,7 +125,7 @@ const getCourseList = async (cookie) => {
     hidsjyzm,
   }
   // 获取课表
-  const content = await request.getCourseApi(cookie, postData, s)
+  const content = await request.getCoursesRequest(cookie, postData, s)
   const $ = cheerio.load(content)
   // 索引映射
   const indexRef = [
@@ -187,9 +187,9 @@ const getCourseList = async (cookie) => {
 }
 
 // 获取有效成绩
-const getScoresList = async (cookie) => {
+const getScoreList = async (cookie) => {
   scorePostData.SJ = 1
-  const content = await request.getScoreApi(cookie, scorePostData)
+  const content = await request.getScoresRequest(cookie, scorePostData)
   const $ = cheerio.load(content)
   // 解析成绩表格
   const scores = []
@@ -245,7 +245,7 @@ const getScoresList = async (cookie) => {
 // 获取全部原始成绩
 const getRawScoreList = async (cookie) => {
   scorePostData.SJ = 0
-  const content = await request.getScoreApi(cookie, scorePostData)
+  const content = await request.getScoresRequest(cookie, scorePostData)
   const $ = cheerio.load(content)
   // 解析成绩表格
   const scores = []
@@ -308,7 +308,7 @@ const getRawScoreList = async (cookie) => {
 
 // 获取考勤列表
 const getAttendanceList = async (cookie) => {
-  const content = await request.getAttendanceApi(cookie)
+  const content = await request.getAttendancesRequest(cookie)
   const $ = cheerio.load(content)
   const attendances = []
   let attendanceItem = Object.assign({})
@@ -368,7 +368,7 @@ const getAttendanceList = async (cookie) => {
 module.exports = {
   login,
   getCourseList,
-  getScoresList,
+  getScoreList,
   getRawScoreList,
   getAttendanceList,
 }

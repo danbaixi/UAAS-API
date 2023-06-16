@@ -10,8 +10,10 @@ University Academic Affairs System API(Google说的)， 简称UAAS-API
 
 ## 已支持学校
 目前已适配青果系统、强智系统，其他系统待补充。
-1. 广东白云学院 10822
-2. 江西软件职业技术大学 13776
+1. 广东白云学院 10822 青果
+2. 江西软件职业技术大学 13776 强智
+3. 新疆理工学院 13558 强智
+4. 广州番禺职业技术学院 12046 强智 【未完全支持】
 
 ## 支持的接口列表
 1. 登录
@@ -59,6 +61,8 @@ npm start
 
 `requests`存放爬虫请求列表，以学校代码为文件名，使用了`util/request.js`提供的`createRequest`方法去创建爬虫请求，供 `services`使用。
 
+`util/responseInterceptors.js`存放响应拦截，主要用于判断token失效
+
 ### 4.观看视频讲解，动手开发
 视频正在录制，待补充...
 
@@ -66,7 +70,7 @@ npm start
 
 接口使用 ApiFox 管理，请访问在线文档阅读 API
 
-[访问 API 在线文档](https://baiyun-api.apifox.cn/)
+[访问 API 在线文档](https://uaas-api.apifox.cn/)
 
 ## License
 

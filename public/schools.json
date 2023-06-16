@@ -22,5 +22,22 @@
     "host": "eam.jxuspt.com:8588",
     "domain": "eam.jxuspt.com:8588/jsxsd",
     "ssl": false
+  },
+  "13558": {
+    "type": "qiangzhi",
+    "code": "13558",
+    "name": "新疆理工学院",
+    "host": "njw.xjistedu.cn",
+    "domain": "njw.xjistedu.cn/jsxsd",
+    "needVerify": true,
+    "ssl": false
+  },
+  "12046": {
+    "type": "qiangzhi",
+    "code": "12046",
+    "name": "广州番禺职业技术学院",
+    "host": "jiaowu.gzpyp.edu.cn",
+    "domain": "jiaowu.gzpyp.edu.cn/jsxsd",
+    "needVerify": true
   }
 }

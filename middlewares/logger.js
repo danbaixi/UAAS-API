@@ -42,11 +42,16 @@ const loggerMiddleware = async (ctx, next) => {
       (ctx.socket.remoteAddress ||
         (ctx.socket.socket && ctx.socket.socket.remoteAddress)))
 
+  // 验证码不打印内容
+  let bodyContent = ""
+  if (ctx.routerPath != "/login-code") {
+    bodyContent = JSON.stringify(ctx.body)
+  }
   let logText = `${ctx.method} ${ctx.status} ${
     ctx.url
-  } 请求参数： ${JSON.stringify(ctx.request.body)} 响应参数： ${JSON.stringify(
-    ctx.body
-  )} - ${remoteAddress} - ${ms}ms`
+  } 请求参数： ${JSON.stringify(
+    ctx.request.body
+  )} 响应参数：${bodyContent} - ${remoteAddress} - ${ms}ms`
   logger.info(logText)
 }
 
