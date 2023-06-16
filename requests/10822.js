@@ -1,7 +1,7 @@
 const createRequest = require("../util/request")
 
 // 获取登录需要的params
-const getLoginFormRequestRequest = () => {
+const getLoginFormRequest = () => {
   return createRequest(
     {
       url: "/_data/login_home.aspx",
@@ -78,7 +78,7 @@ const getCoursesRequest = (cookie, data, m) => {
 }
 
 module.exports = {
-  getLoginFormRequestRequest,
+  getLoginFormRequest,
   loginRequest,
   getScoresRequest,
   getAttendancesRequest,
