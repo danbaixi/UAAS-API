@@ -1,5 +1,6 @@
 const getConfig = (key) => {
   const defaultConfig = {
+    SCHOOL_CODE: "test",
     PORT: 3000,
     TEST_ACCOUNT: "test",
     TEST_PASSWORD: 123456,

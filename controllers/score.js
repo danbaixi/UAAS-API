@@ -1,12 +1,7 @@
 const { getRequestToken } = require("../util/util")
-const {
-  scores: scoresTestData,
-  rawScores: rawScoresTestData,
-} = require("../util/testData")
 const path = require("path")
-const servicePath = `${path.resolve(__dirname, "../services")}/${
-  process.env.SCHOOL_CODE
-}`
+const SCHOOL_CODE = require("../util/config")("SCHOOL_CODE")
+const servicePath = `${path.resolve(__dirname, "../services")}/${SCHOOL_CODE}`
 const services = require(servicePath)
 
 // 请求参数
