@@ -21,7 +21,7 @@ const getCourseList = async () => {
 }
 
 // 获取有效成绩
-const getScoresList = async () => {
+const getScoreList = async () => {
   return testData.scores
 }
 
@@ -38,7 +38,7 @@ const getAttendanceList = async () => {
 module.exports = {
   login,
   getCourseList,
-  getScoresList,
+  getScoreList,
   getRawScoreList,
   getAttendanceList,
 }
