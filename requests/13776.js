@@ -13,7 +13,7 @@ const getLoginFormRequest = () => {
 }
 
 // 登录
-const login = (cookie, data) => {
+const loginRequest = (cookie, data) => {
   return createRequest(
     {
       url: "/xk/LoginToXk",
@@ -69,7 +69,7 @@ const getCoursesRequest = (cookie, data) => {
 
 module.exports = {
   getLoginFormRequest,
-  login,
+  loginRequest,
   getScoresRequest,
   getCoursesFormRequest,
   getCoursesRequest,
