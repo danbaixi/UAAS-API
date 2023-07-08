@@ -31,6 +31,10 @@ const getList = async (ctx, next) => {
 // 获取全部原始成绩
 const getRawList = async (ctx, next) => {
   const cookie = getRequestToken(ctx)
+  if (!services.getRawScoreList) {
+    ctx.errMsg = "该学校不支持查询原始成绩"
+    return next()
+  }
   try {
     const scores = await services.getRawScoreList(cookie)
     ctx.result = scores
