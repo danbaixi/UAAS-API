@@ -32,13 +32,17 @@ const login = async (stuId, password) => {
     encoded,
   }
   const res = await request.loginRequest(cookie, postData)
-  const $ = cheerio.load(res.data)
-  const errMsg = $("#showMsg").text().trim()
-  // 登录成功
-  if (errMsg == "") {
-    return cookie
+  // 登录成功后会重定向到教务系统后台首页，302表示登录成功，否则失败
+  if (res.data) {
+    const $ = cheerio.load(res.data)
+    const errMsg = $("#showMsg").text().trim()
+    // 登录成功
+    if (errMsg == "") {
+      return cookie
+    }
+    throw new Error(errMsg)
   }
-  throw new Error(errMsg)
+  return cookie
 }
 
 // 获取课表
@@ -114,7 +118,7 @@ const getScoreList = async (cookie) => {
     kcxz: "",
     kcsx: "",
     kcmc: "",
-    xsfs: all,
+    xsfs: "all",
     mold: "",
   }
   const content = await request.getScoresRequest(cookie, postData)

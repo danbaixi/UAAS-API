@@ -27,6 +27,7 @@ const loginRequest = (cookie, data) => {
     },
     {
       returnDataType: "all",
+      redirect: true, // 302重定向问题
     }
   )
 }
