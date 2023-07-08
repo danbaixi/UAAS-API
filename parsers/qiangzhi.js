@@ -25,6 +25,9 @@ const scoreParser = ($) => {
     const tds = $(tr).find("td").slice(1)
     let scoreRaw = {}
     tds.each((tdIndex, td) => {
+      if (tdIndex >= indexRef.length) {
+        return
+      }
       const txt = $(td).text().trim()
       scoreRaw[indexRef[tdIndex]] = txt
     })
